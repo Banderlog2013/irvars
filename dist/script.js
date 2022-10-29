@@ -14113,8 +14113,7 @@ const modals = () => {
   bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close'); // передаем селекторы
 
   bindModal('.phone_link', '.popup', '.popup .popup_close'); // вызываем функцию с аргументами для ссылок
-
-  showModalByTime('.popup', 3000);
+  // showModalByTime('.popup', 3000);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (modals); // экспортируем модальные окна

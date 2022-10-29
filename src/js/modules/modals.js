@@ -47,7 +47,7 @@ const modals = () => {
     //     modalEngineerClose = document.querySelector('.popup_engineer .popup_close') // получаем крест закрытия окна
     bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close'); // передаем селекторы
     bindModal('.phone_link', '.popup', '.popup .popup_close'); // вызываем функцию с аргументами для ссылок
-    showModalByTime('.popup', 3000);
+    // showModalByTime('.popup', 3000);
 }
 
 export default modals; // экспортируем модальные окна
