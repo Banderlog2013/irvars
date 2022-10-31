@@ -15180,8 +15180,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_modals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/modals */ "./src/js/modules/modals.js");
 /* harmony import */ var _modules_tabs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/tabs */ "./src/js/modules/tabs.js");
 /* harmony import */ var _modules_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/forms */ "./src/js/modules/forms.js");
+/* harmony import */ var _modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/changeModalState */ "./src/js/modules/changeModalState.js");
 
  // подключаем modals.js
+
 
 
 
@@ -15189,12 +15191,112 @@ window.addEventListener('DOMContentLoaded', () => {
   // назначаем обработчик на весь документ
   "use strict";
 
+  let modalState = {};
   Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])(); // вызываем переменную
 
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
-  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block');
+  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])(modalState);
+  Object(_modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__["default"])(modalState);
 });
+
+/***/ }),
+
+/***/ "./src/js/modules/changeModalState.js":
+/*!********************************************!*\
+  !*** ./src/js/modules/changeModalState.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
+ // Получение данных с формы
+
+const changeModalState = state => {
+  const windowForm = document.querySelectorAll('.balcon_icons_img'),
+        // получаем форму окна
+  windowWidth = document.querySelectorAll('#width'),
+        // ширина окна
+  windowHeight = document.querySelectorAll('#height'),
+        // высота окна
+  windowType = document.querySelectorAll('#view_type'),
+        // рама окна
+  windowProfile = document.querySelectorAll('.checkbox');
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_0__["default"])('#width');
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_0__["default"])('#height');
+
+  function bindActionToElems(event, elem, prop) {
+    // перебираем все элементы окна
+    elem.forEach((item, i) => {
+      item.addEventListener(event, () => {
+        switch (item.nodeName) {
+          case 'SPAN':
+            state[prop] = i;
+            break;
+
+          case 'INPUT':
+            if (item.getAttribute('type') === 'checkbox') {
+              i === 0 ? state[prop] = "Холодное" : state[prop] = "Теплое";
+              elem.forEach((box, j) => {
+                box.checked = false;
+
+                if (i == j) {
+                  box.checked = true;
+                }
+              });
+            } else {
+              state[prop] = item.value;
+            }
+
+            break;
+
+          case 'SELECT':
+            state[prop] = item.value;
+            break;
+        }
+
+        console.log(state);
+      });
+    });
+  }
+
+  bindActionToElems('click', windowForm, 'form');
+  bindActionToElems('input', windowHeight, 'height');
+  bindActionToElems('input', windowWidth, 'width');
+  bindActionToElems('change', windowType, 'type');
+  bindActionToElems('change', windowProfile, 'profile');
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (changeModalState);
+
+/***/ }),
+
+/***/ "./src/js/modules/checkNumInputs.js":
+/*!******************************************!*\
+  !*** ./src/js/modules/checkNumInputs.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.string.replace */ "./node_modules/core-js/modules/es.string.replace.js");
+/* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const checkNumInputs = selector => {
+  const numInputs = document.querySelectorAll(selector);
+  numInputs.forEach(item => {
+    item.addEventListener('input', () => {
+      item.value = item.value.replace(/\D/, '');
+    });
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (checkNumInputs);
 
 /***/ }),
 
@@ -15207,21 +15309,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.string.replace */ "./node_modules/core-js/modules/es.string.replace.js");
-/* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
 
 
-const forms = () => {
+const forms = state => {
   const form = document.querySelectorAll('form'),
         // получаем все формы с сайта
   inputs = document.querySelectorAll('input'); // плдучаем все инпуты сайта
 
-  phoneInputs = document.querySelectorAll('input[name="user_phone"]');
-  phoneInputs.forEach(item => {
-    item.addEventListener('input', () => {
-      item.value = item.value.replace(/\D/, '');
-    });
-  }); // сообщения после отправки формы
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_0__["default"])('input[name="user_phone"]'); // сообщения после отправки формы
 
   const message = {
     loading: 'Загрузка...',
@@ -15248,7 +15344,7 @@ const forms = () => {
   }; // обработчик событий форм
 
 
-  form.forEach(item => e => {
+  form.forEach(item => {
     // перебираем элементы
     item.addEventListener('submit', e => {
       // вешаем обработчик
@@ -15262,6 +15358,13 @@ const forms = () => {
       // сбор данных из формы 
 
       const formData = new FormData(item);
+
+      if (item.getAttribute('data-calc') === 'end') {
+        for (let key in state) {
+          formData.append(key, state[key]);
+        }
+      }
+
       postData('assets/server.php', formData) // отправка запроса серверу с данными
       .then(res => {
         // обработка полученного ответа
@@ -15294,12 +15397,13 @@ const forms = () => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 const modals = () => {
-  function bindModal(triggerSelector, modalSelector, closeSelector) {
+  function bindModal(triggerSelector, modalSelector, closeSelector, closeClickOverlay = true) {
     // н-ция отвечающая за привязку окна к определенному триггеру
     const trigger = document.querySelectorAll(triggerSelector),
           // получаем все элементы с тригеером
     modal = document.querySelector(modalSelector),
-          close = document.querySelector(closeSelector);
+          close = document.querySelector(closeSelector),
+          windows = document.querySelectorAll('[data-modal]');
     trigger.forEach(item => {
       // перебираем полученные элементы
       item.addEventListener('click', e => {
@@ -15309,6 +15413,10 @@ const modals = () => {
           e.preventDefault(); // отмена стандартного поведения браузера
         }
 
+        windows.forEach(item => {
+          // закрываем все модальные окна
+          item.style.display = 'none';
+        });
         modal.style.display = "block"; // присвваимевам свойство мод. окну.
 
         document.body.style.overflow = "hidden"; // отменяем прокуртку
@@ -15317,6 +15425,10 @@ const modals = () => {
     });
     close.addEventListener('click', () => {
       // обработчик для закрытия мод. окна
+      windows.forEach(item => {
+        // закрываем все модальные окна
+        item.style.display = 'none';
+      });
       modal.style.display = "none"; // меняем свойство мод. окна.
 
       document.body.style.overflow = ""; // отменяем отмену прокуртк
@@ -15324,8 +15436,12 @@ const modals = () => {
     });
     modal.addEventListener('click', e => {
       // обработчик для закрытия окна, если клик вне окна
-      if (e.target === modal) {
+      if (e.target === modal && closeClickOverlay) {
         // проверяем условие если клик за пределами мод. окна закрываем окно
+        windows.forEach(item => {
+          // закрываем все модальные окна
+          item.style.display = 'none';
+        });
         modal.style.display = "none"; // меняем свойство мод. окна.
 
         document.body.style.overflow = ""; // отменяем отмену прокуртки
@@ -15349,6 +15465,10 @@ const modals = () => {
 
   bindModal('.phone_link', '.popup', '.popup .popup_close'); // вызываем функцию с аргументами для ссылок
   // showModalByTime('.popup', 60000);
+
+  bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close');
+  bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
+  bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (modals); // экспортируем модальные окна
@@ -15368,7 +15488,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0__);
 
 
-const tabs = (headerSelector, tabSelector, contentSelector, activeClass) => {
+const tabs = (headerSelector, tabSelector, contentSelector, activeClass, display = 'block') => {
   // Получаем элементы со страницы
   const header = document.querySelector(headerSelector),
         tab = document.querySelectorAll(tabSelector),
@@ -15387,7 +15507,7 @@ const tabs = (headerSelector, tabSelector, contentSelector, activeClass) => {
 
 
   function showTabContent(i = 0) {
-    content[i].style.display = 'block';
+    content[i].style.display = display;
     tab[i].classList.add(activeClass);
   }
 

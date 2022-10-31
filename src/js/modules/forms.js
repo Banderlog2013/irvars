@@ -1,19 +1,17 @@
-const forms = () => {
+import checkNumInputs from './checkNumInputs'
+
+const forms = (state) => {
     const form = document.querySelectorAll('form'), // получаем все формы с сайта
           inputs = document.querySelectorAll('input'); // плдучаем все инпуты сайта
-          phoneInputs = document.querySelectorAll('input[name="user_phone"]');
 
-    phoneInputs.forEach(item => {
-        item.addEventListener('input', () => {
-            item.value = item.value.replace(/\D/, '');
-        });
-    });
+    checkNumInputs('input[name="user_phone"]');
+
     // сообщения после отправки формы
     const message = {
         loading: 'Загрузка...',
         success: 'Спасибо! Скоро мы с вами свяжемся',
         failure: 'Что-то пошло не так...'
-    }
+    };
 
     // отправка запросов
 
@@ -24,7 +22,7 @@ const forms = () => {
             body: data
         });
         return await res.text(); // возращаем результат обработки запроса
-    }
+    };
 
     // очиска инпутов
     const clearInputs = () => {
@@ -34,7 +32,7 @@ const forms = () => {
     };
 
     // обработчик событий форм
-    form.forEach(item => (e) => { // перебираем элементы
+    form.forEach(item => { // перебираем элементы
         item.addEventListener('submit', (e) => { // вешаем обработчик
             e.preventDefault(); // отменяем стандартное поведение браузера
 
@@ -44,6 +42,11 @@ const forms = () => {
 
             // сбор данных из формы 
             const formData = new FormData(item)
+            if (item.getAttribute('data-calc') === 'end') {
+                for (let key in state) {
+                    formData.append(key, state[key]);
+                }
+            }
             postData('assets/server.php', formData) // отправка запроса серверу с данными
                 .then(res => { // обработка полученного ответа
                     console.log(res);
