@@ -3,7 +3,8 @@ const modals = () => {
         const trigger = document.querySelectorAll(triggerSelector), // получаем все элементы с тригеером
               modal = document.querySelector(modalSelector),
               close = document.querySelector(closeSelector),
-              windows = document.querySelectorAll('[data-modal]');
+              windows = document.querySelectorAll('[data-modal]'),
+              scroll = calcScroll();
 
 
         trigger.forEach(item => { // перебираем полученные элементы
@@ -19,6 +20,7 @@ const modals = () => {
                 modal.style.display = "block"; // присвваимевам свойство мод. окну.
                 document.body.style.overflow = "hidden"; // отменяем прокуртку
                 // document.body.classList.add('modal-open');
+                document.body.style.marginRight = `${scroll}px`;
             });
         });
 
@@ -30,6 +32,7 @@ const modals = () => {
             modal.style.display = "none"; // меняем свойство мод. окна.
             document.body.style.overflow = ""; // отменяем отмену прокуртк
             // document.body.classList.remove('modal-open');
+            document.body.style.marginRight = `0px`;
         });
 
         modal.addEventListener('click', (e) => { // обработчик для закрытия окна, если клик вне окна
@@ -41,6 +44,7 @@ const modals = () => {
                 modal.style.display = "none"; // меняем свойство мод. окна.
                 document.body.style.overflow = ""; // отменяем отмену прокуртки
                 // document.body.classList.remove('modal-open');
+                document.body.style.marginRight = `0px`;
             }
         });
     }
@@ -55,9 +59,22 @@ const modals = () => {
         }, time)
     }
 
-    // const callEngineerBtn = document.querySelector('.popup_engineer_btn'), // получаем кнопку вызова инженара сос траницы
-    //     modalEngineer = document.querySelector('.popup_engineer'), // получаем модальное окно
-    //     modalEngineerClose = document.querySelector('.popup_engineer .popup_close') // получаем крест закрытия окна
+    // Скролл
+    function calcScroll() {
+        let div = document.createElement('div');
+        div.style.width = '50px';
+        div.style.height = '50px';
+        div.style.overflowY = 'scroll';
+        div.style.visibility = 'hidden';
+
+        document.body.appendChild(div);
+        let scrollWidth = div.offsetWidth - div.clientWidth;
+        div.remove();
+
+        return scrollWidth;
+    }
+
+
     bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close'); // передаем селекторы
     bindModal('.phone_link', '.popup', '.popup .popup_close'); // вызываем функцию с аргументами для ссылок
     // showModalByTime('.popup', 60000);
