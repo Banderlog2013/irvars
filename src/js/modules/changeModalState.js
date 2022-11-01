@@ -45,5 +45,5 @@ const changeModalState = (state) => {
     bindActionToElems('change', windowType, 'type');
     bindActionToElems('change', windowProfile, 'profile');
 };
-
+// ДЗ сделать проверку валидации форм, что форма дальше не пускала пока не выбраны значения
 export default changeModalState;
